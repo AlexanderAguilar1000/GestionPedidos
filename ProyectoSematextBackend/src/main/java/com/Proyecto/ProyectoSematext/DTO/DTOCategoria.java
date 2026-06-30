@@ -1,25 +1,19 @@
-package com.Proyecto.ProyectoSematext.Entity;
+package com.Proyecto.ProyectoSematext.DTO;
 
-import jakarta.persistence.*;
-import lombok.Data;
+import com.Proyecto.ProyectoSematext.Entity.CategoriaEntity;
 
-import java.util.List;
-
-@Data
-@Entity
-@Table(name="categorias")
-public class CategoriaEntity
+public class DTOCategoria
 {
-    //Es programación orientada a objetos necetio trabjar con objetos
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer idcategoria;
     private String nombrecategoria;
 
+    public DTOCategoria(CategoriaEntity categoria) {
+        this.idcategoria = categoria.getIdcategoria();
+        this.nombrecategoria = categoria.getNombrecategoria();
+    }
 
 
-    //Metodos getter and setter
-
+    //metodos getter and setter
 
     public Integer getIdcategoria() {
         return idcategoria;

@@ -1,0 +1,122 @@
+<div class="form-card">
+
+  <div class="form-header">
+    <div class="form-icon">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+        <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
+        <line x1="12" y1="22.08" x2="12" y2="12"/>
+      </svg>
+    </div>
+    <h2 class="form-title">Registrar Producto</h2>
+    <p class="form-subtitle">Complete los datos del nuevo producto</p>
+  </div>
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+
+    <!-- Nombre del Producto -->
+    <div class="field-group">
+      <label class="field-label" for="nombre">Nombre del Producto</label>
+      <input
+        id="nombre"
+        type="text"
+        formControlName="nombre"
+        class="field-input"
+        [class.field-input--error]="isFieldInvalid('nombre')"
+        placeholder="Ingrese el nombre del producto"
+        autocomplete="off"
+      />
+      @if (isFieldInvalid('nombre')) {
+        <span class="field-error">
+          @if (form.get('nombre')?.errors?.['required']) { El nombre es obligatorio. }
+          @if (form.get('nombre')?.errors?.['minlength']) { Mínimo 2 caracteres. }
+          @if (form.get('nombre')?.errors?.['maxlength']) { Máximo 100 caracteres. }
+        </span>
+      }
+    </div>
+
+    <!-- Descripción -->
+    <div class="field-group">
+      <label class="field-label" for="descripcion">Descripción</label>
+      <textarea
+        id="descripcion"
+        formControlName="descripcion"
+        class="field-textarea"
+        [class.field-textarea--error]="isFieldInvalid('descripcion')"
+        placeholder="Ingrese una descripción del producto (opcional)"
+        rows="3"
+      ></textarea>
+      @if (isFieldInvalid('descripcion')) {
+        <span class="field-error">
+          @if (form.get('descripcion')?.errors?.['maxlength']) { Máximo 500 caracteres. }
+        </span>
+      }
+    </div>
+
+    <!-- Categoría -->
+    <div class="field-group">
+      <label class="field-label" for="categoriaId">Categoría</label>
+      <div class="select-wrapper">
+        <select
+          id="categoriaId"
+          formControlName="categoriaId"
+          class="field-select"
+          [class.field-select--error]="isFieldInvalid('categoriaId')"
+        >
+          <option [ngValue]="null" disabled>Seleccione una categoría</option>
+          @for (cat of categorias; track cat.id) {
+            <option [ngValue]="cat.id">{{ cat.nombre }}</option>
+          }
+        </select>
+        <span class="select-chevron">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+            fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="6 9 12 15 18 9"/>
+          </svg>
+        </span>
+      </div>
+      @if (isFieldInvalid('categoriaId')) {
+        <span class="field-error">Seleccione una categoría.</span>
+      }
+    </div>
+
+    <!-- Unidad de Medida -->
+    <div class="field-group">
+      <label class="field-label" for="unidadMedidaId">Unidad de Medida</label>
+      <div class="select-wrapper">
+        <select
+          id="unidadMedidaId"
+          formControlName="unidadMedidaId"
+          class="field-select"
+          [class.field-select--error]="isFieldInvalid('unidadMedidaId')"
+        >
+          <option [ngValue]="null" disabled>Seleccione una unidad de medida</option>
+          @for (um of unidadesMedida; track um.id) {
+            <option [ngValue]="um.id">{{ um.nombre }}</option>
+          }
+        </select>
+        <span class="select-chevron">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+            fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="6 9 12 15 18 9"/>
+          </svg>
+        </span>
+      </div>
+      @if (isFieldInvalid('unidadMedidaId')) {
+        <span class="field-error">Seleccione una unidad de medida.</span>
+      }
+    </div>
+
+    <!-- Acciones -->
+    <div class="form-actions">
+      <button type="button" class="btn btn--secondary" (click)="onCancelar()">
+        Cancelar
+      </button>
+      <button type="submit" class="btn btn--primary">
+        Registrar Producto
+      </button>
+    </div>
+
+  </form>
+</div>
