@@ -29,4 +29,6 @@ public class ControllerProducto
 
         return ResponseEntity.ok(productoService.registrarProducto(dtoproducto));
     }
+
+
 }

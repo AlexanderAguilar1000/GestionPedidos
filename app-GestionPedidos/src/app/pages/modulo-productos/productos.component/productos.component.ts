@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import {
   ProductoFormComponent,
-  Producto,
 } from '../producto-form.component/producto-form.component';
-import { ProductoService } from '../producto.service';
+import { ProductoService } from '../servicios/producto.service';
+import { Producto } from '../models/producto.model';
 
 @Component({
   selector: 'app-productos',

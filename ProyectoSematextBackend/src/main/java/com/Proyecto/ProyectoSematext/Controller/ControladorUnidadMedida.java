@@ -1,8 +1,8 @@
 package com.Proyecto.ProyectoSematext.Controller;
 
 import com.Proyecto.ProyectoSematext.DTO.DTOCategoria;
-import com.Proyecto.ProyectoSematext.Entity.CategoriaEntity;
-import com.Proyecto.ProyectoSematext.Repository.RepositorioCategoria;
+import com.Proyecto.ProyectoSematext.DTO.DTOUnidadMedida;
+import com.Proyecto.ProyectoSematext.Repository.RepositorioUnidadMedida;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -11,20 +11,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+
 @CrossOrigin(origins = "http://localhost:4200")
 @RestController
-@RequestMapping("/categoria")
-public class ControllerCategoria
+@RequestMapping("/UnidadMedida")
+public class ControladorUnidadMedida
 {
     @Autowired
-    private RepositorioCategoria repositorioCategoria;
+    private RepositorioUnidadMedida repositorioUnidadMedida;
 
-    @GetMapping("listacategorias")
-    public ResponseEntity<List<DTOCategoria>>getAll()
+    @GetMapping("listaUnidadMedida")
+    public ResponseEntity<List<DTOUnidadMedida>> getAll()
     {
         //stream permite procesarlo
-        return ResponseEntity.ok(repositorioCategoria.findAll().stream().map(DTOCategoria :: new ).toList());
+        return ResponseEntity.ok(repositorioUnidadMedida.findAll().stream().map(DTOUnidadMedida :: new ).toList());
     }
-
-
 }
