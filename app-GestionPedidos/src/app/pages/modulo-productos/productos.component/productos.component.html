@@ -39,15 +39,76 @@
         <div class="alert alert--error">{{ mensajeError() }}</div>
       }
 
-      <!--Este representa el componente para registrar un producto el formulario -->
-      <div class="content-area">
-        <app-producto-form
-          (productoRegistrado)="onProductoRegistrado($event)"
-          (cancelar)="onCancelar()"
+      <!-- Tabla de productos -->
+      <div class="table-card">
+
+        <app-producto-toolbar
+          (registrar)="onAbrirFormulario()"
+          (eliminar)="onEliminar()"
         />
+
+        @if (cargando()) {
+          <div class="table-state">
+            <div class="spinner"></div>
+            <span>Cargando productos...</span>
+          </div>
+        } @else if (productos().length === 0) {
+          <div class="table-state">
+            <svg xmlns="http://www.w3.org/2000/svg" width="44" height="44" viewBox="0 0 24 24"
+              fill="none" stroke="#9dbfaa" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+              <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
+              <line x1="12" y1="22.08" x2="12" y2="12"/>
+            </svg>
+            <span>No hay productos registrados.</span>
+            <button class="btn-empty" (click)="onAbrirFormulario()">Registrar el primero</button>
+          </div>
+        } @else {
+          <div class="table-wrapper">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Nombre</th>
+                  <th>Descripción</th>
+                  <th>Categoría</th>
+                  <th>Unidad de Medida</th>
+                  <th>Estado</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (p of productos(); track p.idproducto) {
+                  <tr class="table-row">
+                    <td class="td--nombre">{{ p.nombreProducto }}</td>
+                    <td class="td--desc">{{ p.descripcion || '—' }}</td>
+                    <td>{{ p.nombreCategoria }}</td>
+                    <td>{{ p.unidadmedida }}</td>
+                    <td>
+                      <span class="badge" [class.badge--activo]="p.activo" [class.badge--inactivo]="!p.activo">
+                        {{ p.activo ? 'Activo' : 'Inactivo' }}
+                      </span>
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        }
+
       </div>
 
     </div>
   </main>
+
+  <!-- Modal de registro -->
+  @if (mostrarFormulario()) {
+    <div class="modal-overlay" (click)="onCerrarFormulario()">
+      <div class="modal-content" (click)="$event.stopPropagation()">
+        <app-producto-form
+          (productoRegistrado)="onProductoRegistrado($event)"
+          (cancelar)="onCerrarFormulario()"
+        />
+      </div>
+    </div>
+  }
 
 </div>

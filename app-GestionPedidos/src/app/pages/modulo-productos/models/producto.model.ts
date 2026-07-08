@@ -25,3 +25,12 @@ export interface DTOProducto {
   unidadmedida?: string;
   activo?: boolean;
 }
+
+export interface ListaProductos {
+  idproducto: number;
+  nombreProducto: string;
+  nombreCategoria: string;
+  descripcion: string;
+  unidadmedida: string;
+  activo: boolean;
+}
