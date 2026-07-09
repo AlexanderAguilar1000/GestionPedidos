@@ -81,18 +81,6 @@
                   <tr class="table-row">
                     <td class="td--acciones">
                       <div class="action-btns">
-                        <!-- Visualizar -->
-                        <button
-                          class="action-btn action-btn--view"
-                          title="Visualizar"
-                          (click)="onVisualizarProducto(p)"
-                        >
-                          <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24"
-                            fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
-                            <circle cx="12" cy="12" r="3"/>
-                          </svg>
-                        </button>
                         <!-- Editar -->
                         <button
                           class="action-btn action-btn--edit"
@@ -150,6 +138,61 @@
           (productoRegistrado)="onProductoRegistrado($event)"
           (cancelar)="onCerrarFormulario()"
         />
+      </div>
+    </div>
+  }
+
+  <!-- Modal de edición -->
+  @if (productoEditando()) {
+    <div class="modal-overlay" (click)="onCerrarEdicion()">
+      <div class="modal-content" (click)="$event.stopPropagation()">
+        <app-producto-edit
+          [productoId]="productoEditando()!.idproducto"
+          (guardado)="onProductoEditado()"
+          (cancelar)="onCerrarEdicion()"
+        />
+      </div>
+    </div>
+  }
+
+  <!-- Modal de confirmación de eliminación -->
+  @if (productoAEliminar()) {
+    <div class="modal-overlay" (click)="onCerrarEliminar()">
+      <div class="confirm-modal" (click)="$event.stopPropagation()">
+        <div class="confirm-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24"
+            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="3 6 5 6 21 6"/>
+            <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+            <path d="M10 11v6M14 11v6"/>
+            <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>
+          </svg>
+        </div>
+        <h3 class="confirm-title">¿Está seguro de eliminar este producto?</h3>
+        <p class="confirm-body">
+          El producto <strong>{{ productoAEliminar()!.nombreProducto }}</strong> será enviado a la papelera.
+          Podrá recuperarlo desde allí si es necesario.
+        </p>
+        <div class="confirm-actions">
+          <button
+            class="confirm-btn confirm-btn--cancel"
+            (click)="onCerrarEliminar()"
+            [disabled]="eliminando()"
+          >
+            Cancelar
+          </button>
+          <button
+            class="confirm-btn confirm-btn--delete"
+            (click)="onConfirmarEliminar()"
+            [disabled]="eliminando()"
+          >
+            @if (eliminando()) {
+              <span class="btn-spinner btn-spinner--white"></span> Eliminando...
+            } @else {
+              Eliminar
+            }
+          </button>
+        </div>
       </div>
     </div>
   }

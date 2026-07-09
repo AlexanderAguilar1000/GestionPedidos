@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, OnInit, inject, signal } from '@angular/core';
 import { ProductoFormComponent } from '../producto-form.component/producto-form.component';
+import { ProductoEditComponent } from '../producto-edit.component/producto-edit.component';
 import { ProductoToolbarComponent } from '../producto-toolbar.component/producto-toolbar.component';
 import { ProductoService } from '../servicios/producto.service';
 import { Producto, ListaProductos } from '../models/producto.model';
@@ -7,7 +8,7 @@ import { Producto, ListaProductos } from '../models/producto.model';
 @Component({
   selector: 'app-productos',
   standalone: true,
-  imports: [ProductoFormComponent, ProductoToolbarComponent],
+  imports: [ProductoFormComponent, ProductoEditComponent, ProductoToolbarComponent],
   templateUrl: './productos.component.html',
   styleUrl: './productos.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -20,6 +21,10 @@ export class ProductosComponent implements OnInit {
   readonly mostrarFormulario = signal(false);
   readonly mensajeExito = signal<string | null>(null);
   readonly mensajeError = signal<string | null>(null);
+
+  readonly productoEditando = signal<ListaProductos | null>(null);
+  readonly productoAEliminar = signal<ListaProductos | null>(null);
+  readonly eliminando = signal(false);
 
   ngOnInit(): void {
     this.cargarProductos();
@@ -72,21 +77,57 @@ export class ProductosComponent implements OnInit {
   }
 
   onEliminar(): void {
-    // TODO: implementar eliminación masiva
+    // TODO: eliminación masiva
   }
 
-  onVisualizarProducto(producto: ListaProductos): void {
-    console.log('Visualizar producto:', producto);
-    // TODO: abrir modal de detalle
-  }
+  // ── Edición ──────────────────────────────────────────
 
   onEditarProducto(producto: ListaProductos): void {
-    console.log('Editar producto:', producto);
-    // TODO: abrir modal de edición
+    this.mensajeExito.set(null);
+    this.mensajeError.set(null);
+    this.productoEditando.set(producto);
   }
 
+  onCerrarEdicion(): void {
+    this.productoEditando.set(null);
+  }
+
+  onProductoEditado(): void {
+    this.productoEditando.set(null);
+    this.mensajeExito.set('Producto actualizado correctamente.');
+    this.cargarProductos();
+  }
+
+  // ── Eliminación ───────────────────────────────────────
+
   onEliminarProducto(producto: ListaProductos): void {
-    console.log('Eliminar producto:', producto);
-    // TODO: confirmar y llamar endpoint de eliminación
+    this.mensajeExito.set(null);
+    this.mensajeError.set(null);
+    this.productoAEliminar.set(producto);
+  }
+
+  onCerrarEliminar(): void {
+    this.productoAEliminar.set(null);
+  }
+
+  onConfirmarEliminar(): void {
+    const producto = this.productoAEliminar();
+    if (!producto) return;
+
+    this.eliminando.set(true);
+    this.productoService.anularProducto(producto.idproducto).subscribe({
+      next: () => {
+        this.eliminando.set(false);
+        this.productoAEliminar.set(null);
+        this.mensajeExito.set(`El producto "${producto.nombreProducto}" fue enviado a la papelera.`);
+        this.cargarProductos();
+      },
+      error: (error) => {
+        console.error('Error al anular producto:', error);
+        this.eliminando.set(false);
+        this.productoAEliminar.set(null);
+        this.mensajeError.set('Ocurrió un error al eliminar el producto. Intente nuevamente.');
+      },
+    });
   }
 }

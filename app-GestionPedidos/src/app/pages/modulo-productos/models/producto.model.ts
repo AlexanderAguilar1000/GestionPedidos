@@ -34,3 +34,30 @@ export interface ListaProductos {
   unidadmedida: string;
   activo: boolean;
 }
+
+export interface ProductoDetailResponse {
+  idproducto: number;
+  nombreproducto: string;
+  descripcion: string;
+  categoria: string;
+  unidadMedida: string;
+  activo: boolean;
+}
+
+export interface ProductoUpdateRequest {
+  idproducto?: number;
+  nombreproducto: string;
+  descripcion: string;
+  categoria: number;
+  unidadMedida: number;
+  activo: boolean;
+}
+
+export interface ProductoResponse {
+  idproducto: number;
+  nombreproducto: string;
+  descripcion: string;
+  categoria: number;
+  unidadMedida: number;
+  activo: boolean;
+}
