@@ -1,6 +1,9 @@
 package com.Proyecto.ProyectoSematext.Controller;
 
 import com.Proyecto.ProyectoSematext.DTO.DTOProducto;
+import com.Proyecto.ProyectoSematext.DTO.request.ProductoUpdateRequest;
+import com.Proyecto.ProyectoSematext.DTO.response.ProductoDetailResponse;
+import com.Proyecto.ProyectoSematext.DTO.response.ProductoResponse;
 import com.Proyecto.ProyectoSematext.Entity.ProductoEntity;
 import com.Proyecto.ProyectoSematext.Entity.UsuarioEntity;
 import com.Proyecto.ProyectoSematext.Repository.RepositorioProducto;
@@ -37,6 +40,26 @@ public class ControllerProducto
         return ResponseEntity.ok(repositorioProducto.findAll().stream().map(
                 DTOProducto.ListaProductos::new
         ).toList());
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<ProductoResponse>update(@PathVariable Integer idProducto , @RequestBody ProductoUpdateRequest pro)
+    {
+        return ResponseEntity.ok(productoService.update(idProducto,pro));
+    }
+
+
+    @GetMapping("/{id}/productodetalle")
+    public ResponseEntity<ProductoDetailResponse>getProducto(@PathVariable Integer id)
+    {
+        return ResponseEntity.ok(productoService.getInformacionProducto(id));
+    }
+
+    @PutMapping("/{id}/cancelProducto")
+    public ResponseEntity<String>cancelDocument(@PathVariable Integer id )
+    {
+        productoService.annularProducto(id);
+        return ResponseEntity.ok("Producto anulado correctamente");
     }
 
 

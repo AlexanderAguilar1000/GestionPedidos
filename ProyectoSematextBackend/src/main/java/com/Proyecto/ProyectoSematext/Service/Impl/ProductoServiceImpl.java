@@ -1,6 +1,9 @@
 package com.Proyecto.ProyectoSematext.Service.Impl;
 
 import com.Proyecto.ProyectoSematext.DTO.DTOProducto;
+import com.Proyecto.ProyectoSematext.DTO.request.ProductoUpdateRequest;
+import com.Proyecto.ProyectoSematext.DTO.response.ProductoDetailResponse;
+import com.Proyecto.ProyectoSematext.DTO.response.ProductoResponse;
 import com.Proyecto.ProyectoSematext.Entity.CategoriaEntity;
 import com.Proyecto.ProyectoSematext.Entity.ProductoEntity;
 import com.Proyecto.ProyectoSematext.Entity.UnidadMedidaEntity;
@@ -9,8 +12,9 @@ import com.Proyecto.ProyectoSematext.Repository.RepositorioProducto;
 import com.Proyecto.ProyectoSematext.Repository.RepositorioUnidadMedida;
 import com.Proyecto.ProyectoSematext.Service.ProductoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-
+import org.springframework.web.server.ResponseStatusException;
 
 
 @Service
@@ -80,4 +84,63 @@ public class ProductoServiceImpl implements ProductoService
 
         return respuesta;
     }
+
+    public ProductoResponse update(Integer id, ProductoUpdateRequest productoUpdateRequest)
+    {
+        ProductoEntity productoEntity=repositorioProducto.findById(id).orElseThrow(()->new RuntimeException("Producto no encontrado"));
+
+        CategoriaEntity categoriaEntity=repositorioCategoria.findById(productoUpdateRequest.getCategoria()).orElseThrow(()->new RuntimeException("Categoria no encontrada"));
+
+        UnidadMedidaEntity unidadMedidaEntity=repositorioUnidadMedida.findById(productoUpdateRequest.getUnidadMedida()).orElseThrow(()->new RuntimeException("Unidad no encontrada"));
+
+
+        productoEntity.setNombre(productoUpdateRequest.getNombreproducto());
+        productoEntity.setDescripcion(productoUpdateRequest.getDescripcion());
+        productoEntity.setCategoria(categoriaEntity);
+        productoEntity.setUnidadMedidaEntity(unidadMedidaEntity);
+        productoEntity.setActivo(productoUpdateRequest.isActivo());
+
+        ProductoEntity productoactualizado= repositorioProducto.save(productoEntity);
+
+
+         return toResponse(productoactualizado);
+
+    }
+
+    public ProductoDetailResponse getInformacionProducto(Integer idproducto)
+    {
+       ProductoEntity productoEntity=repositorioProducto.findById(idproducto).orElseThrow(()->new RuntimeException("NO se encontro el Producto"));
+
+       ProductoDetailResponse obj=new ProductoDetailResponse();
+       obj.setIdproducto(productoEntity.getIdproducto());
+       obj.setNombreproducto(productoEntity.getNombre());
+       obj.setDescripcion(productoEntity.getDescripcion());
+       obj.setCategoria(productoEntity.getCategoria().getNombrecategoria());
+       obj.setUnidadMedida(productoEntity.getUnidadMedidaEntity().getNombre());
+       obj.setActivo(productoEntity.isActivo());
+       return  obj;
+
+    }
+
+    public void  annularProducto(Integer idproducto)
+    {
+        ProductoEntity productoEntity=repositorioProducto.findById(idproducto).orElseThrow(()->new RuntimeException("No se encontro el Producto"));
+        productoEntity.setDeleted(true);
+
+        repositorioProducto.save(productoEntity);
+
+    }
+
+    public ProductoResponse toResponse(ProductoEntity entity) {
+        ProductoResponse response=new ProductoResponse();
+        response.setIdproducto(entity.getIdproducto());
+        response.setNombreproducto(entity.getNombre());
+        response.setDescripcion(entity.getDescripcion());
+        response.setCategoria(entity.getCategoria().getIdcategoria());
+        response.setUnidadMedida(entity.getUnidadMedidaEntity().getIdunidadmedida());
+        response.setActivo(entity.isActivo());
+        return response;
+    }
+
+
 }

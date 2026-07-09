@@ -189,6 +189,58 @@
   max-width: 260px;
 }
 
+/* ── Action Buttons ─────────────────────────────────── */
+
+.th--acciones {
+  width: 120px;
+}
+
+.td--acciones {
+  white-space: nowrap;
+}
+
+.action-btns {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.action-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  transition: transform 0.15s, filter 0.15s, box-shadow 0.15s;
+  flex-shrink: 0;
+}
+
+.action-btn:hover {
+  transform: scale(1.12);
+  filter: brightness(0.88);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+}
+
+.action-btn:active {
+  transform: scale(0.95);
+}
+
+.action-btn--view {
+  background: #06b6d4;
+}
+
+.action-btn--edit {
+  background: #3b82f6;
+}
+
+.action-btn--delete {
+  background: #ef4444;
+}
+
 /* ── Badges ─────────────────────────────────────────── */
 
 .badge {

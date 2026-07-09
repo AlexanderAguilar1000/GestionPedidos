@@ -72,6 +72,21 @@ export class ProductosComponent implements OnInit {
   }
 
   onEliminar(): void {
-    // TODO: implementar eliminación de productos seleccionados
+    // TODO: implementar eliminación masiva
+  }
+
+  onVisualizarProducto(producto: ListaProductos): void {
+    console.log('Visualizar producto:', producto);
+    // TODO: abrir modal de detalle
+  }
+
+  onEditarProducto(producto: ListaProductos): void {
+    console.log('Editar producto:', producto);
+    // TODO: abrir modal de edición
+  }
+
+  onEliminarProducto(producto: ListaProductos): void {
+    console.log('Eliminar producto:', producto);
+    // TODO: confirmar y llamar endpoint de eliminación
   }
 }
