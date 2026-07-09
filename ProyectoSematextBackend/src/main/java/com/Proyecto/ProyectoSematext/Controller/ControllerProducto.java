@@ -42,7 +42,7 @@ public class ControllerProducto
         ).toList());
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/{idProducto}")
     public ResponseEntity<ProductoResponse>update(@PathVariable Integer idProducto , @RequestBody ProductoUpdateRequest pro)
     {
         return ResponseEntity.ok(productoService.update(idProducto,pro));
