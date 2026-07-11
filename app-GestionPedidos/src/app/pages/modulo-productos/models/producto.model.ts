@@ -61,3 +61,7 @@ export interface ProductoResponse {
   unidadMedida: number;
   activo: boolean;
 }
+
+export interface ApiResponse {
+  message: string;
+}

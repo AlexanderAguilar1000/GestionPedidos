@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { DTOProducto, ListaProductos, ProductoDetailResponse, ProductoUpdateRequest, ProductoResponse } from '../models/producto.model';
+import { DTOProducto, ListaProductos, ProductoDetailResponse, ProductoUpdateRequest, ProductoResponse, ApiResponse } from '../models/producto.model';
 
 @Injectable({ providedIn: 'root' })
 export class ProductoService {
@@ -24,7 +24,7 @@ export class ProductoService {
     return this.http.put<ProductoResponse>(`${this.baseUrl}/${idProducto}`, request);
   }
 
-  anularProducto(id: number): Observable<string> {
-    return this.http.put<string>(`${this.baseUrl}/${id}/cancelProducto`, {});
+  anularProducto(id: number): Observable<ApiResponse> {
+    return this.http.put<ApiResponse>(`${this.baseUrl}/${id}/cancelProducto`, {});
   }
 }

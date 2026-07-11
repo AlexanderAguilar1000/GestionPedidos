@@ -117,10 +117,14 @@ export class ProductosComponent implements OnInit {
     this.eliminando.set(true);
     this.productoService.anularProducto(producto.idproducto).subscribe({
       next: () => {
+        // Remover el producto del array local inmediatamente
+        this.productos.update((productos) =>
+          productos.filter((p) => p.idproducto !== producto.idproducto)
+        );
+        
         this.eliminando.set(false);
         this.productoAEliminar.set(null);
         this.mensajeExito.set(`El producto "${producto.nombreProducto}" fue enviado a la papelera.`);
-        this.cargarProductos();
       },
       error: (error) => {
         console.error('Error al anular producto:', error);
