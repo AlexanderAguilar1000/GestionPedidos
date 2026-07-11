@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -37,7 +38,7 @@ public class ControllerProducto
     @GetMapping("/listaProductos")
     public ResponseEntity<List<DTOProducto.ListaProductos>>getAllProductos()
     {
-        return ResponseEntity.ok(repositorioProducto.findAll().stream().map(
+        return ResponseEntity.ok(repositorioProducto.findAllNotDeleted().stream().map(
                 DTOProducto.ListaProductos::new
         ).toList());
     }
@@ -56,10 +57,12 @@ public class ControllerProducto
     }
 
     @PutMapping("/{id}/cancelProducto")
-    public ResponseEntity<String>cancelDocument(@PathVariable Integer id )
+    public ResponseEntity<Map<String, String>>cancelDocument(@PathVariable Integer id )
     {
         productoService.annularProducto(id);
-        return ResponseEntity.ok("Producto anulado correctamente");
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "Producto anulado correctamente");
+        return ResponseEntity.ok(response);
     }
 
 
