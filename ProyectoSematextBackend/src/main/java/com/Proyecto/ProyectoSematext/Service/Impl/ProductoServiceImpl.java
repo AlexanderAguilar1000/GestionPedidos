@@ -12,6 +12,7 @@ import com.Proyecto.ProyectoSematext.Repository.RepositorioProducto;
 import com.Proyecto.ProyectoSematext.Repository.RepositorioUnidadMedida;
 import com.Proyecto.ProyectoSematext.Service.ProductoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -85,13 +86,57 @@ public class ProductoServiceImpl implements ProductoService
         return respuesta;
     }
 
+    /**
+     * Actualiza los datos de un producto existente.
+     *
+     * Propósito:
+     * Valida los datos recibidos, localiza el producto por su id (fuente de verdad:
+     * el parámetro de ruta, no el campo idproducto del cuerpo), verifica que no esté
+     * anulado y que la categoría y unidad de medida referenciadas existan, aplica los
+     * cambios y persiste el producto actualizado.
+     *
+     * Manejo de Errores:
+     * - Datos inválidos (nombre vacío, categoria/unidadMedida nulos, id del cuerpo
+     *   distinto al de la ruta): ResponseStatusException BAD_REQUEST.
+     * - Producto no encontrado: ResponseStatusException NOT_FOUND.
+     * - Producto anulado (deleted = true): ResponseStatusException BAD_REQUEST.
+     * - Categoría o unidad de medida no encontradas: ResponseStatusException BAD_REQUEST.
+     *
+     * @param id id del producto a actualizar (tomado de la ruta).
+     * @param productoUpdateRequest datos a aplicar sobre el producto.
+     * @return ProductoResponse con el estado actualizado del producto.
+     * @throws ResponseStatusException si la validación falla o alguna entidad referenciada no existe.
+     */
+    @Override
     public ProductoResponse update(Integer id, ProductoUpdateRequest productoUpdateRequest)
     {
-        ProductoEntity productoEntity=repositorioProducto.findById(id).orElseThrow(()->new RuntimeException("Producto no encontrado"));
+        if (productoUpdateRequest.getNombreproducto() == null || productoUpdateRequest.getNombreproducto().isBlank())
+        {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "El nombre del producto es obligatorio");
+        }
+        if (productoUpdateRequest.getCategoria() == null)
+        {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "La categoria es obligatoria");
+        }
+        if (productoUpdateRequest.getUnidadMedida() == null)
+        {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "La unidad de medida es obligatoria");
+        }
+        if (productoUpdateRequest.getIdproducto() != null && !productoUpdateRequest.getIdproducto().equals(id))
+        {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "El id del producto no coincide con la ruta");
+        }
 
-        CategoriaEntity categoriaEntity=repositorioCategoria.findById(productoUpdateRequest.getCategoria()).orElseThrow(()->new RuntimeException("Categoria no encontrada"));
+        ProductoEntity productoEntity=repositorioProducto.findById(id).orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND, "Producto no encontrado"));
 
-        UnidadMedidaEntity unidadMedidaEntity=repositorioUnidadMedida.findById(productoUpdateRequest.getUnidadMedida()).orElseThrow(()->new RuntimeException("Unidad no encontrada"));
+        if (productoEntity.isDeleted())
+        {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No se puede editar un producto anulado");
+        }
+
+        CategoriaEntity categoriaEntity=repositorioCategoria.findById(productoUpdateRequest.getCategoria()).orElseThrow(()->new ResponseStatusException(HttpStatus.BAD_REQUEST, "Categoria no encontrada"));
+
+        UnidadMedidaEntity unidadMedidaEntity=repositorioUnidadMedida.findById(productoUpdateRequest.getUnidadMedida()).orElseThrow(()->new ResponseStatusException(HttpStatus.BAD_REQUEST, "Unidad no encontrada"));
 
 
         productoEntity.setNombre(productoUpdateRequest.getNombreproducto());

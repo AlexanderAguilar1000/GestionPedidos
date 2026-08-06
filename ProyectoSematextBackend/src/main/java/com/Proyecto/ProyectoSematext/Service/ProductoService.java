@@ -10,6 +10,16 @@ public interface ProductoService
 {
     public DTOProducto registrarProducto(DTOProducto productodto);
 
+    /**
+     * Actualiza un producto existente.
+     *
+     * @param id id del producto a actualizar.
+     * @param productoUpdateRequest datos a aplicar.
+     * @return ProductoResponse con el producto actualizado.
+     * @throws org.springframework.web.server.ResponseStatusException con NOT_FOUND si el producto no existe,
+     *         o BAD_REQUEST si los datos son inválidos, el producto está anulado, o la categoría/unidad
+     *         de medida referenciadas no existen.
+     */
     public ProductoResponse update(Integer id, ProductoUpdateRequest productoUpdateRequest);
 
     public ProductoDetailResponse getInformacionProducto(Integer idproducto);
