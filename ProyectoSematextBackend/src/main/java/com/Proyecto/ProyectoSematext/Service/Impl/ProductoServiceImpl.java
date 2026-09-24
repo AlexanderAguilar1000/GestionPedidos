@@ -21,6 +21,9 @@ import org.springframework.web.server.ResponseStatusException;
 @Service
 public class ProductoServiceImpl implements ProductoService
 {
+    /** Longitud máxima de nombre y descripción (varchar(255) por defecto en la tabla productos). */
+    private static final int MAX_LONGITUD_TEXTO = 255;
+
     @Autowired
     private RepositorioProducto repositorioProducto;
 
@@ -41,27 +44,31 @@ public class ProductoServiceImpl implements ProductoService
      * del producto creado, incluyendo su ID generado.
      * 
      * Manejo de Errores:
-     * - Si la categoría (idcategoria) no existe en la base de datos, se lanza una RuntimeException con un mensaje descriptivo.
-     * - Si la unidad de medida (idunidadmedida) no existe en la base de datos, se lanza una RuntimeException con un mensaje descriptivo.
-     * - Cualquier error durante el proceso de persistencia en la base de datos (e.g., violación de restricciones) 
+     * - Datos inválidos (cuerpo nulo, nombre o descripción vacíos/en blanco o demasiado largos,
+     *   categoría o unidad de medida sin informar): ResponseStatusException BAD_REQUEST.
+     * - Categoría o unidad de medida inexistentes: ResponseStatusException BAD_REQUEST.
+     * - Cualquier error durante el proceso de persistencia en la base de datos (e.g., violación de restricciones)
      *   será propagado como la excepción correspondiente de Spring/JPA.
-     * 
+     *
      * @param productodto DTO que contiene la información del producto a registrar.
      * @return DTOProducto con la información del producto registrado, incluyendo su nuevo ID.
-     * @throws RuntimeException si la categoría o la unidad de medida no son encontradas en la base de datos.
+     * @throws ResponseStatusException si la validación falla o la categoría/unidad de medida no existen.
      */
     @Override
     public DTOProducto registrarProducto(DTOProducto productodto)
     {
+        // 0. Validación de campos obligatorios (antes de cualquier consulta a la base de datos)
+        validarRegistro(productodto);
+
         // 1. Manejo de errores y validación de la Categoría
-        // Busca la categoría por su ID en el repositorio. Si no existe, lanza una RuntimeException.
+        // Busca la categoría por su ID en el repositorio. Si no existe, lanza BAD_REQUEST.
         CategoriaEntity categoria=repositorioCategoria.findById(productodto.getIdcategoria())
-                .orElseThrow(()->new RuntimeException("Categoria no encontrada con id: " + productodto.getIdcategoria()));
+                .orElseThrow(()->new ResponseStatusException(HttpStatus.BAD_REQUEST, "Categoria no encontrada"));
 
         // 2. Manejo de errores y validación de la Unidad de Medida
-        // Busca la unidad de medida por su ID en el repositorio. Si no existe, lanza una RuntimeException.
+        // Busca la unidad de medida por su ID en el repositorio. Si no existe, lanza BAD_REQUEST.
         UnidadMedidaEntity unidadMedida=repositorioUnidadMedida.findById(productodto.getIdunidadmedida())
-                .orElseThrow(()->new RuntimeException("Unidad de medida no encontrada con id: " + productodto.getIdunidadmedida()));
+                .orElseThrow(()->new ResponseStatusException(HttpStatus.BAD_REQUEST, "Unidad de medida no encontrada"));
 
         // 3. Mapeo de DTO a Entidad Producto
         // Se instancia un nuevo ProductoEntity y se le asignan las relaciones y propiedades correspondientes.
@@ -84,6 +91,46 @@ public class ProductoServiceImpl implements ProductoService
         respuesta.setDescripcion(productoGuardado.getDescripcion());
 
         return respuesta;
+    }
+
+    /**
+     * Valida los campos obligatorios de un producto a registrar.
+     *
+     * @param productodto DTO recibido del cliente.
+     * @throws ResponseStatusException BAD_REQUEST si el cuerpo es nulo, el nombre o la descripción
+     *         están vacíos/en blanco o exceden {@value #MAX_LONGITUD_TEXTO} caracteres, o si la
+     *         categoría o la unidad de medida no fueron informadas.
+     */
+    private void validarRegistro(DTOProducto productodto)
+    {
+        if (productodto == null)
+        {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Los datos del producto son obligatorios");
+        }
+        if (productodto.getNombreProducto() == null || productodto.getNombreProducto().isBlank())
+        {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "El nombre del producto es obligatorio");
+        }
+        if (productodto.getNombreProducto().length() > MAX_LONGITUD_TEXTO)
+        {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "El nombre del producto no puede superar los " + MAX_LONGITUD_TEXTO + " caracteres");
+        }
+        if (productodto.getDescripcion() == null || productodto.getDescripcion().isBlank())
+        {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "La descripcion del producto es obligatoria");
+        }
+        if (productodto.getDescripcion().length() > MAX_LONGITUD_TEXTO)
+        {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "La descripcion del producto no puede superar los " + MAX_LONGITUD_TEXTO + " caracteres");
+        }
+        if (productodto.getIdcategoria() == null)
+        {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "La categoria es obligatoria");
+        }
+        if (productodto.getIdunidadmedida() == null)
+        {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "La unidad de medida es obligatoria");
+        }
     }
 
     /**

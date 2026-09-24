@@ -8,6 +8,15 @@ import com.Proyecto.ProyectoSematext.Entity.ProductoEntity;
 
 public interface ProductoService
 {
+    /**
+     * Registra un nuevo producto activo.
+     *
+     * @param productodto datos del producto a registrar.
+     * @return DTOProducto con el id generado, nombre y descripción del producto registrado.
+     * @throws org.springframework.web.server.ResponseStatusException con BAD_REQUEST si el nombre o la
+     *         descripción están vacíos o son demasiado largos, si falta la categoría o la unidad de medida,
+     *         o si estas no existen.
+     */
     public DTOProducto registrarProducto(DTOProducto productodto);
 
     /**

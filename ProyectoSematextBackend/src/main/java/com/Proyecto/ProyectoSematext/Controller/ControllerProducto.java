@@ -31,11 +31,39 @@ public class ControllerProducto
     @Autowired
     private RepositorioProducto repositorioProducto;
 
+    /**
+     * Registra un nuevo producto.
+     *
+     * Propósito:
+     * Recibe los datos del producto en el cuerpo de la petición, delega la validación de campos
+     * obligatorios (nombre y descripción no vacíos, categoría y unidad de medida informadas) y el
+     * registro al servicio de producto, y retorna el producto creado envuelto en el formato estándar
+     * de respuesta { success, data, error }.
+     *
+     * Manejo de Errores:
+     * - Si los datos son inválidos o la categoría/unidad de medida no existen, el servicio lanza una
+     *   ResponseStatusException que se traduce en 400 con un mensaje seguro para el cliente.
+     * - Cualquier otro error inesperado se responde como 500 sin exponer detalles internos.
+     *
+     * @param dtoproducto datos del producto: nombreProducto, descripcion, idcategoria, idunidadmedida.
+     * @return 201 con ApiResponse.ok(DTOProducto) en éxito; 400/500 con ApiResponse.fail(mensaje) en error.
+     */
     @PostMapping("/productosagregar")
-    public ResponseEntity<?>AgregarProducto(@RequestBody DTOProducto dtoproducto)
+    public ResponseEntity<ApiResponse<DTOProducto>> AgregarProducto(@RequestBody DTOProducto dtoproducto)
     {
-
-        return ResponseEntity.ok(productoService.registrarProducto(dtoproducto));
+        try
+        {
+            DTOProducto resultado = productoService.registrarProducto(dtoproducto);
+            return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.ok(resultado));
+        }
+        catch (ResponseStatusException e)
+        {
+            return ResponseEntity.status(e.getStatusCode()).body(ApiResponse.fail(e.getReason()));
+        }
+        catch (Exception e)
+        {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ApiResponse.fail("Error interno del servidor"));
+        }
     }
 
     @GetMapping("/listaProductos")
