@@ -15,6 +15,10 @@ public class ProductoEntity
     private String descripcion;
     private boolean activo;
 
+    // columnDefinition con default: permite que ddl-auto=update agregue la columna en una tabla con filas existentes.
+    @Column(nullable = false, columnDefinition = "boolean default false")
+    private boolean deleted;
+
     @ManyToOne(fetch=FetchType.EAGER)
     @JoinColumn(name="idcategoria")
     private CategoriaEntity categoria;
@@ -71,5 +75,13 @@ public class ProductoEntity
 
     public void setUnidadMedidaEntity(UnidadMedidaEntity unidadMedidaEntity) {
         this.unidadMedidaEntity = unidadMedidaEntity;
+    }
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
     }
 }

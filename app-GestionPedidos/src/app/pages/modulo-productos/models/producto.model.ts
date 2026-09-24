@@ -25,3 +25,43 @@ export interface DTOProducto {
   unidadmedida?: string;
   activo?: boolean;
 }
+
+export interface ListaProductos {
+  idproducto: number;
+  nombreProducto: string;
+  nombreCategoria: string;
+  descripcion: string;
+  unidadmedida: string;
+  activo: boolean;
+}
+
+export interface ProductoDetailResponse {
+  idproducto: number;
+  nombreproducto: string;
+  descripcion: string;
+  categoria: string;
+  unidadMedida: string;
+  activo: boolean;
+}
+
+export interface ProductoUpdateRequest {
+  idproducto?: number;
+  nombreproducto: string;
+  descripcion: string;
+  categoria: number;
+  unidadMedida: number;
+  activo: boolean;
+}
+
+export interface ProductoResponse {
+  idproducto: number;
+  nombreproducto: string;
+  descripcion: string;
+  categoria: number;
+  unidadMedida: number;
+  activo: boolean;
+}
+
+export interface ApiResponse {
+  message: string;
+}

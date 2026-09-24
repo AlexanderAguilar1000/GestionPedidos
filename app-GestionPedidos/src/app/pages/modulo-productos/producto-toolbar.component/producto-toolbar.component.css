@@ -1,0 +1,53 @@
+:host {
+  display: block;
+}
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 24px;
+  border-bottom: 1px solid #d4e8db;
+}
+
+.toolbar__sub {
+  font-size: 0.875rem;
+  color: #5a7060;
+  margin: 0;
+}
+
+.toolbar__actions {
+  display: flex;
+  gap: 10px;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 9px 18px;
+  border-radius: 8px;
+  border: none;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.15s, transform 0.1s;
+}
+
+.btn:hover {
+  opacity: 0.88;
+}
+
+.btn:active {
+  transform: scale(0.97);
+}
+
+.btn--primary {
+  background: linear-gradient(135deg, #0d4d2e, #1db860);
+  color: #ffffff;
+}
+
+.btn--danger {
+  background: #dc3545;
+  color: #ffffff;
+}

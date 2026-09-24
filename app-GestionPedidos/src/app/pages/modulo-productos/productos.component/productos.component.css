@@ -30,7 +30,6 @@
   align-items: center;
   gap: 10px;
   color: #ffffff;
-  text-decoration: none;
 }
 
 .brand__icon {
@@ -75,7 +74,7 @@
 /* ── Main ───────────────────────────────────────────── */
 
 .page-main {
-  padding: 48px 32px;
+  padding: 40px 32px;
 }
 
 .page-container {
@@ -86,7 +85,7 @@
 /* ── Page Heading ───────────────────────────────────── */
 
 .page-heading {
-  margin-bottom: 36px;
+  margin-bottom: 24px;
 }
 
 .page-heading__title {
@@ -105,9 +104,8 @@
 /* ── Alerts ─────────────────────────────────────────── */
 
 .alert {
-  max-width: 540px;
-  margin: 0 auto 20px;
-  padding: 12px 16px;
+  margin-bottom: 16px;
+  padding: 12px 18px;
   border-radius: 8px;
   font-size: 0.9rem;
   font-weight: 500;
@@ -125,14 +123,323 @@
   border: 1px solid #f1b3b3;
 }
 
-/* ── Content area ───────────────────────────────────── */
+/* ── Table Card ─────────────────────────────────────── */
 
-.content-area {
-  display: flex;
-  justify-content: center;
+.table-card {
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 2px 16px rgba(13, 77, 46, 0.1);
+  overflow: hidden;
 }
 
-.content-area app-producto-form {
+/* ── Table ──────────────────────────────────────────── */
+
+.table-wrapper {
+  overflow-x: auto;
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.data-table thead tr {
+  background: #0d4d2e;
+}
+
+.data-table thead th {
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 14px 20px;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.data-table tbody tr {
+  border-bottom: 1px solid #eaf2ed;
+  transition: background 0.15s;
+}
+
+.data-table tbody tr:last-child {
+  border-bottom: none;
+}
+
+.data-table tbody tr:hover {
+  background: #f0faf4;
+}
+
+.data-table td {
+  padding: 14px 20px;
+  color: #2a3f30;
+  vertical-align: middle;
+}
+
+.td--nombre {
+  font-weight: 600;
+  color: #0d4d2e;
+}
+
+.td--desc {
+  color: #5a7060;
+  font-size: 0.875rem;
+  max-width: 260px;
+}
+
+/* ── Action Buttons ─────────────────────────────────── */
+
+.th--acciones {
+  width: 120px;
+}
+
+.td--acciones {
+  white-space: nowrap;
+}
+
+.action-btns {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.action-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  transition: transform 0.15s, filter 0.15s, box-shadow 0.15s;
+  flex-shrink: 0;
+}
+
+.action-btn:hover {
+  transform: scale(1.12);
+  filter: brightness(0.88);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+}
+
+.action-btn:active {
+  transform: scale(0.95);
+}
+
+.action-btn--edit {
+  background: #3b82f6;
+}
+
+.action-btn--delete {
+  background: #ef4444;
+}
+
+/* ── Badges ─────────────────────────────────────────── */
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+}
+
+.badge--activo {
+  background: #e1f5e9;
+  color: #136337;
+  border: 1px solid #9fd9b8;
+}
+
+.badge--inactivo {
+  background: #f3f4f6;
+  color: #6b7280;
+  border: 1px solid #d1d5db;
+}
+
+/* ── Table states ───────────────────────────────────── */
+
+.table-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  padding: 72px 24px;
+  color: #7a9e88;
+  font-size: 0.9rem;
+}
+
+.btn-empty {
+  margin-top: 4px;
+  padding: 9px 20px;
+  background: linear-gradient(135deg, #0d4d2e, #1db860);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+
+.btn-empty:hover {
+  opacity: 0.88;
+}
+
+.spinner {
+  width: 36px;
+  height: 36px;
+  border: 3px solid #c8e6d4;
+  border-top-color: #1db860;
+  border-radius: 50%;
+  animation: spin 0.75s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ── Modal ──────────────────────────────────────────── */
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 24px;
+  animation: fadeIn 0.15s ease;
+}
+
+.modal-content {
   width: 100%;
   max-width: 540px;
+  max-height: 90vh;
+  overflow-y: auto;
+  border-radius: 14px;
+  animation: slideUp 0.2s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { transform: translateY(18px); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+
+/* ── Confirm delete modal ───────────────────────────── */
+
+.confirm-modal {
+  background: #ffffff;
+  border-radius: 18px;
+  box-shadow: 0 8px 40px rgba(239, 68, 68, 0.18);
+  padding: 40px 36px 36px;
+  width: 100%;
+  max-width: 420px;
+  text-align: center;
+  animation: slideUp 0.2s ease;
+  border-top: 4px solid #ef4444;
+}
+
+.confirm-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 64px;
+  background: #fef2f2;
+  border-radius: 50%;
+  color: #ef4444;
+  margin-bottom: 20px;
+  border: 2px solid #fecaca;
+}
+
+.confirm-title {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #1a2e22;
+  margin: 0 0 12px;
+  line-height: 1.4;
+}
+
+.confirm-body {
+  font-size: 0.9rem;
+  color: #5a7060;
+  margin: 0 0 28px;
+  line-height: 1.6;
+}
+
+.confirm-body strong {
+  color: #1a2e22;
+  font-weight: 600;
+}
+
+.confirm-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.confirm-btn {
+  flex: 1;
+  padding: 12px 20px;
+  border-radius: 50px;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: background 0.18s ease, box-shadow 0.18s ease, transform 0.1s ease;
+  font-family: inherit;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.confirm-btn:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.confirm-btn:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+.confirm-btn--cancel {
+  background: #f4f6f4;
+  color: #3a4a3d;
+  border: 1.5px solid #dde8df;
+}
+
+.confirm-btn--cancel:hover:not(:disabled) {
+  background: #e8ede9;
+}
+
+.confirm-btn--delete {
+  background: linear-gradient(135deg, #b91c1c, #ef4444);
+  color: #ffffff;
+  box-shadow: 0 3px 12px rgba(239, 68, 68, 0.28);
+}
+
+.confirm-btn--delete:hover:not(:disabled) {
+  background: linear-gradient(135deg, #991b1b, #dc2626);
+  box-shadow: 0 5px 18px rgba(239, 68, 68, 0.38);
+}
+
+.btn-spinner--white {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  border-top-color: #ffffff;
+  border-radius: 50%;
+  animation: spin 0.75s linear infinite;
+  flex-shrink: 0;
 }

@@ -1,0 +1,95 @@
+<div class="login-page">
+
+  <!-- Top Bar -->
+  <header class="top-bar">
+    <div class="top-bar__inner">
+      <div class="brand">
+        <div class="brand__icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24"
+            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+            <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
+            <line x1="12" y1="22.08" x2="12" y2="12"/>
+          </svg>
+        </div>
+        <span class="brand__name">Sematext</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="login-main">
+
+    <!-- Left: Form Card -->
+    <div class="form-col">
+      <div class="form-card">
+
+        <!-- Logo -->
+        <div class="logo-wrapper">
+          <img src="/assets/Logo.jpg" alt="Sematex Logo" class="logo-img" />
+        </div>
+
+        <!-- Alerts -->
+        @if (mensajeExito()) {
+          <div class="alert alert--success">{{ mensajeExito() }}</div>
+        }
+        @if (mensajeError()) {
+          <div class="alert alert--error">{{ mensajeError() }}</div>
+        }
+
+        <!-- Form -->
+        <form [formGroup]="form" (ngSubmit)="onLogin()" novalidate>
+
+          <div class="field-group">
+            <input
+              type="text"
+              formControlName="nombreusuario"
+              class="field-input"
+              [class.field-input--error]="isFieldInvalid('nombreusuario')"
+              placeholder="Ingresar Nombre Usuario"
+              autocomplete="username"
+            />
+            @if (isFieldInvalid('nombreusuario')) {
+              <span class="field-error">El nombre de usuario es obligatorio.</span>
+            }
+          </div>
+
+          <div class="field-group">
+            <input
+              type="password"
+              formControlName="contrasena"
+              class="field-input"
+              [class.field-input--error]="isFieldInvalid('contrasena')"
+              placeholder="Ingresar contraseña"
+              autocomplete="current-password"
+            />
+            @if (isFieldInvalid('contrasena')) {
+              <span class="field-error">La contraseña es obligatoria.</span>
+            }
+          </div>
+
+          <button type="submit" class="btn btn--primary" [disabled]="cargando()">
+            @if (cargando()) {
+              <span class="btn-spinner"></span> Ingresando...
+            } @else {
+              Ingresar
+            }
+          </button>
+
+        </form>
+
+        <button type="button" class="btn btn--secondary" (click)="onRegistrar()" [disabled]="cargando()">
+          Registrar
+        </button>
+
+      </div>
+    </div>
+
+    <!-- Right: Image -->
+    <div class="image-col">
+      <img src="/assets/ImagenLoginS.jpg" alt="Sematex" class="hero-img" />
+    </div>
+
+  </main>
+
+</div>

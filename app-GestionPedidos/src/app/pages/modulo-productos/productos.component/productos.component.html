@@ -39,15 +39,162 @@
         <div class="alert alert--error">{{ mensajeError() }}</div>
       }
 
-      <!--Este representa el componente para registrar un producto el formulario -->
-      <div class="content-area">
-        <app-producto-form
-          (productoRegistrado)="onProductoRegistrado($event)"
-          (cancelar)="onCancelar()"
+      <!-- Tabla de productos -->
+      <div class="table-card">
+
+        <app-producto-toolbar
+          (registrar)="onAbrirFormulario()"
+          (eliminar)="onEliminar()"
         />
+
+        @if (cargando()) {
+          <div class="table-state">
+            <div class="spinner"></div>
+            <span>Cargando productos...</span>
+          </div>
+        } @else if (productos().length === 0) {
+          <div class="table-state">
+            <svg xmlns="http://www.w3.org/2000/svg" width="44" height="44" viewBox="0 0 24 24"
+              fill="none" stroke="#9dbfaa" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+              <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
+              <line x1="12" y1="22.08" x2="12" y2="12"/>
+            </svg>
+            <span>No hay productos registrados.</span>
+            <button class="btn-empty" (click)="onAbrirFormulario()">Registrar el primero</button>
+          </div>
+        } @else {
+          <div class="table-wrapper">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th class="th--acciones">Acciones</th>
+                  <th>Nombre</th>
+                  <th>Descripción</th>
+                  <th>Categoría</th>
+                  <th>Unidad de Medida</th>
+                  <th>Estado</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (p of productos(); track p.idproducto) {
+                  <tr class="table-row">
+                    <td class="td--acciones">
+                      <div class="action-btns">
+                        <!-- Editar -->
+                        <button
+                          class="action-btn action-btn--edit"
+                          title="Editar"
+                          (click)="onEditarProducto(p)"
+                        >
+                          <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24"
+                            fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                          </svg>
+                        </button>
+                        <!-- Eliminar -->
+                        <button
+                          class="action-btn action-btn--delete"
+                          title="Eliminar"
+                          (click)="onEliminarProducto(p)"
+                        >
+                          <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24"
+                            fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="3 6 5 6 21 6"/>
+                            <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+                            <path d="M10 11v6M14 11v6"/>
+                            <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>
+                          </svg>
+                        </button>
+                      </div>
+                    </td>
+                    <td class="td--nombre">{{ p.nombreProducto }}</td>
+                    <td class="td--desc">{{ p.descripcion || '—' }}</td>
+                    <td>{{ p.nombreCategoria }}</td>
+                    <td>{{ p.unidadmedida }}</td>
+                    <td>
+                      <span class="badge" [class.badge--activo]="p.activo" [class.badge--inactivo]="!p.activo">
+                        {{ p.activo ? 'Activo' : 'Inactivo' }}
+                      </span>
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        }
+
       </div>
 
     </div>
   </main>
+
+  <!-- Modal de registro -->
+  @if (mostrarFormulario()) {
+    <div class="modal-overlay" (click)="onCerrarFormulario()">
+      <div class="modal-content" (click)="$event.stopPropagation()">
+        <app-producto-form
+          (productoRegistrado)="onProductoRegistrado($event)"
+          (cancelar)="onCerrarFormulario()"
+        />
+      </div>
+    </div>
+  }
+
+  <!-- Modal de edición -->
+  @if (productoEditando()) {
+    <div class="modal-overlay" (click)="onCerrarEdicion()">
+      <div class="modal-content" (click)="$event.stopPropagation()">
+        <app-producto-edit
+          [productoId]="productoEditando()!.idproducto"
+          (guardado)="onProductoEditado()"
+          (cancelar)="onCerrarEdicion()"
+        />
+      </div>
+    </div>
+  }
+
+  <!-- Modal de confirmación de eliminación -->
+  @if (productoAEliminar()) {
+    <div class="modal-overlay" (click)="onCerrarEliminar()">
+      <div class="confirm-modal" (click)="$event.stopPropagation()">
+        <div class="confirm-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24"
+            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="3 6 5 6 21 6"/>
+            <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+            <path d="M10 11v6M14 11v6"/>
+            <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>
+          </svg>
+        </div>
+        <h3 class="confirm-title">¿Está seguro de eliminar este producto?</h3>
+        <p class="confirm-body">
+          El producto <strong>{{ productoAEliminar()!.nombreProducto }}</strong> será enviado a la papelera.
+          Podrá recuperarlo desde allí si es necesario.
+        </p>
+        <div class="confirm-actions">
+          <button
+            class="confirm-btn confirm-btn--cancel"
+            (click)="onCerrarEliminar()"
+            [disabled]="eliminando()"
+          >
+            Cancelar
+          </button>
+          <button
+            class="confirm-btn confirm-btn--delete"
+            (click)="onConfirmarEliminar()"
+            [disabled]="eliminando()"
+          >
+            @if (eliminando()) {
+              <span class="btn-spinner btn-spinner--white"></span> Eliminando...
+            } @else {
+              Eliminar
+            }
+          </button>
+        </div>
+      </div>
+    </div>
+  }
 
 </div>

@@ -1,5 +1,7 @@
 package com.Proyecto.ProyectoSematext.DTO;
 
+import com.Proyecto.ProyectoSematext.Entity.ProductoEntity;
+
 public class DTOProducto
 {
     private Integer idproducto;
@@ -19,6 +21,33 @@ public class DTOProducto
     public Integer getIdproducto() {
         return idproducto;
     }
+
+    public record ListaProductos(
+            Integer idproducto,
+            String nombreProducto,
+            String nombreCategoria,
+            String descripcion,
+            String unidadmedida,
+            boolean activo
+    ) {
+        public ListaProductos(ProductoEntity producto) {
+            this(
+                    producto.getIdproducto(),
+                    producto.getNombre(),
+                    producto.getCategoria().getNombrecategoria(),
+                    producto.getDescripcion(),
+                    producto.getUnidadMedidaEntity().getNombre(),
+                    producto.isActivo()
+            );
+        }
+    }
+
+
+
+
+
+
+
 
     public void setIdproducto(Integer idproducto) {
         this.idproducto = idproducto;

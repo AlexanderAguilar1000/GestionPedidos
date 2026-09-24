@@ -81,3 +81,4 @@ Every controller method must follow all of these rules:
 8. **Layered separation** — Controllers handle HTTP only; business logic lives in services; persistence in repositories.
 9. **Security** — Every non-public endpoint must verify authentication and authorization.
 10. **Consistency** — Naming conventions, response shape, and error format must be uniform across all endpoints.
+11. **DTO analysis before implementation** — Before implementing any endpoint, analyze its request/response DTOs and add all necessary validations (e.g. `@NotNull`, `@NotBlank`, `@Size`, `@Email`, custom validators). No required validation may be omitted.
