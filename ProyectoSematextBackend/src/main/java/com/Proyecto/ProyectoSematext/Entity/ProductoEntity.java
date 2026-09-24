@@ -15,7 +15,8 @@ public class ProductoEntity
     private String descripcion;
     private boolean activo;
 
-    @Column(nullable = false)
+    // columnDefinition con default: permite que ddl-auto=update agregue la columna en una tabla con filas existentes.
+    @Column(nullable = false, columnDefinition = "boolean default false")
     private boolean deleted;
 
     @ManyToOne(fetch=FetchType.EAGER)

@@ -71,7 +71,11 @@ export class ProductosComponent implements OnInit {
         },
         error: (error) => {
           console.error('Error al registrar producto:', error);
-          this.mensajeError.set('Ocurrió un error al registrar el producto. Intente nuevamente.');
+          // El backend responde { success: false, error: "<mensaje seguro>" } en errores de validación (400).
+          const mensajeBackend = error?.status === 400 ? error?.error?.error : null;
+          this.mensajeError.set(
+            mensajeBackend ?? 'Ocurrió un error al registrar el producto. Intente nuevamente.',
+          );
         },
       });
   }
